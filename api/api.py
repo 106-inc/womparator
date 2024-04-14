@@ -4,7 +4,7 @@ import os
 import time
 
 class APIRequest():
-    def __init__(self, text = "", system_role = "", max_attempt_count = 5) -> None:
+    def __init__(self, text = "", system_role = "", max_attempt_count = 10) -> None:
         self.text = text
         self.system_role = system_role
         self.prompt = {}
@@ -67,7 +67,6 @@ class APIRequest():
             raise RuntimeError(f"Can't get answer from LLM. Attempts exited. Error code: {prev_response.status_code}. Last response: {prev_response.text}")
         
         if prev_response.status_code == requests.codes.too_many_requests:
-            print("Retry")
             time.sleep(attempt_number)
             response = requests.post(self.url, headers=self.headers, json=self.json)
             return self.handle_error(response, attempt_number + 1)
