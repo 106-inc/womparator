@@ -30,7 +30,6 @@ class APIRequest():
         return [message1, message2]
 
     def createJSON(self):
-        print(self.text)
         json_file = {}
 
         json_file["modelUri"] = self.createURLModel()
