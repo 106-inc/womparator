@@ -14,7 +14,18 @@ function App() {
 
          if (file.type.match(textFile)) {
             reader.onload = function (event) {
-               preview.innerHTML = event.target.result;
+               let body = event.target.result;
+               fetch('http://localhost:8080/upload', {
+                method: 'POST',
+                body,
+              }).then((response) => {
+                response.json().then((body) => {
+                  console.log(response)
+                })
+                .catch(error => {
+                  console.error('failed to post file:', error);
+                });
+              });
             }
          } else {
             preview.innerHTML = "<span class='error'>It doesn't seem to be a text file!</span>";
@@ -27,8 +38,9 @@ function App() {
   }
 
   useEffect(() => {
-    fetch('/api/hello')
+    fetch('http://localhost:8080/api/hello')
       .then(response => {
+        console.log(response);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
