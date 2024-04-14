@@ -57,6 +57,7 @@ function App() {
   return (
     <div className="App">
     <input type="file" onChange={showFile}/>
+    <div id="show-text">Choose text File</div>
     </div>
   );
 }
