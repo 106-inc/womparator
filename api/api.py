@@ -1,14 +1,25 @@
 import json
 import requests
 import os
+import time
 
 class APIRequest():
-    def __init__(self, text = "", system_role = "") -> None:
+    def __init__(self, text = "", system_role = "", max_attempt_count = 5) -> None:
         self.text = text
         self.system_role = system_role
         self.prompt = {}
-        self.folder_id = os.getenv("YC_FOLDER_ID", "")
-        self.api = os.getenv("YC_IAM_TOKEN", "")
+        self.max_attempt_count = max_attempt_count
+        self.folder_id = os.getenv("YC_FOLDER_ID")
+        assert self.folder_id and "env variable 'YC_FOLDER_ID' undefined"
+        self.api = os.getenv("YC_IAM_TOKEN")
+        assert self.folder_id and "env variable 'YC_IAM_TOKEN' undefined"
+        
+        self.url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
+        self.headers = {}
+        self.headers["Content-Type"] = "application/json"
+        self.headers['Authorization'] = 'Bearer ' + str(self.api)
+        self.headers['x-folder-id'] = self.folder_id
+
     def createURLModel(self):
         model = "gpt://" + self.folder_id + "/yandexgpt-lite"
         return model
@@ -44,21 +55,27 @@ class APIRequest():
         #    outfile.write(json_data)
 
     def send_request(self):
-
-        url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
-
-        headers = {}
-        headers["Content-Type"] = "application/json"
-        headers['Authorization'] = 'Bearer ' + str(self.api)
-        headers['x-folder-id'] = self.folder_id
-
-        response = requests.post(url, headers=headers, json=self.json)
-        result = response.text
+        response = requests.post(self.url, headers=self.headers, json=self.json)
+        result = self.handle_error(response, 0).text
         return result
+    
+    def handle_error(self, prev_response, attempt_number: int):
+        if prev_response.status_code == requests.codes.ok:
+            return prev_response
+
+        if attempt_number >= self.max_attempt_count:
+            raise RuntimeError(f"Can't get answer from LLM. Attempts exited. Error code: {prev_response.status_code}. Last response: {prev_response.text}")
+        
+        if prev_response.status_code == requests.codes.too_many_requests:
+            print("Retry")
+            time.sleep(attempt_number)
+            response = requests.post(self.url, headers=self.headers, json=self.json)
+            return self.handle_error(response, attempt_number + 1)
+        raise RuntimeError(f"Can't get answer from LLM. Error code: {prev_response.status_code}. Last response: {prev_response.text}")
 
     def run(self):
         self.createJSON()
         return self.send_request()
 
-#a = APIRequest("Превед медвед", "Найди ошибки в тексте")
-#a.run()
+# a = APIRequest("Превед медвед", "Найди ошибки в тексте")
+# print(a.run())
