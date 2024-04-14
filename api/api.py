@@ -59,7 +59,7 @@ class APIRequest():
 
     def run(self):
         self.createJSON()
-        self.send_request()
+        return self.send_request()
 
 #a = APIRequest("Превед медвед", "Найди ошибки в тексте")
 #a.run()
