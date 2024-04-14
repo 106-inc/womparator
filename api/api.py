@@ -61,5 +61,5 @@ class APIRequest():
         self.createJSON()
         self.send_request()
 
-a = APIRequest("Превед медвед", "Найди ошибки в тексте")
-a.run()
+#a = APIRequest("Превед медвед", "Найди ошибки в тексте")
+#a.run()
