@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { Box } from '@mui/system';
 import './App.css';
+
+function Item(props) {
+  const { sx, ...other } = props;
+  return (
+    <Box
+      sx={{
+        p: 1,
+        m: 1,
+        ...sx,
+      }}
+      {...other}
+    />
+  );
+}
+
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -9,7 +25,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [buttonText, setButtonText] = useState('Select your file first');
+  const [buttonText, setButtonText] = useState('Select your files first');
 
   const Spinner = () => (
     <svg
@@ -31,6 +47,48 @@ function App() {
     </svg>
   );
 
+  const Form = () => (
+    <form onSubmit={(e) => handleFileUpload(e)}>
+      <label className='uploader'>
+        <div className='upload-space'>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <>
+              {isError || isSuccess ? (
+                <i
+                  className={`icon-${isSuccess ? 'success' : 'error'}`}
+                ></i>
+              ) : (
+                <>
+                  {preview ? (
+                    <div className='preview'>
+                      <img
+                        src={preview}
+                        alt='Preview of the file to be uploaded'
+                      />
+                    </div>
+                  ) : (
+                    <i className='icon-upload'></i>
+                  )}
+                  <input type='file' onChange={onFileSelected} />
+                </>
+              )}
+            </>
+          )}
+        </div>
+        {isError || isSuccess ? (
+          <p className={isSuccess ? 'success' : 'error'}>
+            {isSuccess ? 'Upload successful!' : 'Something went wrong ...'}
+          </p>
+        ) : (
+          <p className='filename'>
+            {fileName ? fileName : 'No file selected yet'}
+          </p>
+        )}
+      </label>
+    </form>
+  );
 
   // Handling file selection from input
   const onFileSelected = (e) => {
@@ -76,9 +134,9 @@ function App() {
           response.json().then((body) => {
             console.log(response)
           })
-          .catch(error => {
-            console.error('failed to post file:', error);
-          });
+            .catch(error => {
+              console.error('failed to post file:', error);
+            });
         });
       }
     } catch (error) {
@@ -89,57 +147,33 @@ function App() {
   return (
     <div className='app'>
       <header className='title'>
-        <h1>Text compare</h1>
+        <h1>Compare documents</h1>
       </header>
       <main>
-        <form onSubmit={(e) => handleFileUpload(e)}>
-        <label className='uploader'>
-            <div className='upload-space'>
-              {isLoading ? (
-                <Spinner />
-              ) : (
-                <>
-                  {isError || isSuccess ? (
-                    <i
-                      className={`icon-${isSuccess ? 'success' : 'error'}`}
-                    ></i>
-                  ) : (
-                    <>
-                      {preview ? (
-                        <div className='preview'>
-                          <img
-                            src={preview}
-                            alt='Preview of the file to be uploaded'
-                          />
-                        </div>
-                      ) : (
-                        <i className='icon-upload'></i>
-                      )}
-                      <input type='file' onChange={onFileSelected} />
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-            {isError || isSuccess ? (
-              <p className={isSuccess ? 'success' : 'error'}>
-                {isSuccess ? 'Upload successful!' : 'Something went wrong ...'}
-              </p>
-            ) : (
-              <p className='filename'>
-                {fileName ? fileName : 'No file selected yet'}
-              </p>
-            )}
-          </label>
-          <button
-            type='submit'
-            className='btn'
-            disabled={isDisabled}
-            tabIndex={0}
-          >
-            {buttonText}
-          </button>
-        </form>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'nowrap',
+          }}
+        >
+          <Item><Form /></Item>
+          <Item><Form /></Item>
+        </Box>
+        <Box sx={{
+          display: 'flex',
+          flexWrap: 'nowrap',
+          justifyContent: 'flex-end'
+        }}>
+          <Item sx={{ gridRow: '1', gridColumn: '4 / 5' }}>
+            <button
+              type='submit'
+              className='btn'
+              disabled={isDisabled}
+              tabIndex={0}
+            >
+              {buttonText}
+            </button></Item>
+        </Box>
       </main>
     </div>
   );
