@@ -127,7 +127,7 @@ function App() {
     try {
       if (selectedFile !== '') {
 
-        fetch('http://localhost:8080/upload', {
+        fetch('/upload', {
           method: 'POST',
           body: selectedFile,
         }).then((response) => {

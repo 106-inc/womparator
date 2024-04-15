@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./womparator/frontend
+    volumes:
+      - ./womparator/frontend:/usr/src/app
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+  backend:
+    build: ./womparator/backend
+    volumes:
+      - ./womparator/backend:/app
+    ports:
+      - "8080:8080"
