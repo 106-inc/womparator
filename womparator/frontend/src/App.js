@@ -16,17 +16,59 @@ function Item(props) {
   );
 }
 
-
 function App() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState(null);
+  const [files] = useState(new Map());
+  const [filenames] = useState(new Map());
+  const [fileContents] = useState(new Map());
   const [preview, setPreview] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [buttonText, setButtonText] = useState('Select your files first');
 
-  const Form = () => (
-    <form>
+  const FormType = {
+    Description: 'Description',
+    Requirements: 'Requirements',
+  };
+
+  // Handling file selection from input
+  const onFileSelected = (e, formType) => {
+    let file = e.target.files[0];
+    if (file) {
+      files.set(formType, file);
+      filenames.set(formType, file.name);
+      if (files.size > 1) {
+        setIsDisabled(false); // Enabling upload button
+        setButtonText("Compare!");
+      }
+    }
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result);
+      reader.onload = () => fileContents.set(formType, reader.result)
+      reader.readAsText(file);
+    }
+  };
+
+  const onCompareButton = () => {
+    const body = {
+      "Description": fileContents.get(FormType.Description),
+      "Requirements": fileContents.get(FormType.Requirements),
+    };
+    fetch('http://localhost:8080/upload', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }).then((response) => {
+      response.json().then((body) => {
+        console.log(response)
+      })
+        .catch(error => {
+          console.error('failed to post file:', error);
+        });
+    });
+  }
+
+  function Form(props) {
+    let filename = filenames.get(props.type);
+    return (<form>
       <label className='uploader'>
         <div className='upload-space'>
           <>
@@ -40,43 +82,15 @@ function App() {
             ) : (
               <i className='icon-upload'></i>
             )}
-            <input type='file' onChange={onFileSelected} />
+            <input type='file' onChange={(e) => onFileSelected(e, props.type)} />
           </>
         </div>
         <p className='filename'>
-          {fileName ? fileName : 'No file selected yet'}
+          {filename ? filename : 'No file selected yet'}
         </p>
       </label>
-    </form>
-  );
-
-  // Handling file selection from input
-  const onFileSelected = (e) => {
-    if (e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-      setFileName(e.target.files[0].name);
-      setIsDisabled(false); // Enabling upload button
-      setButtonText("Let's upload this!");
-    }
-  };
-
-  // Setting image preview
-  useEffect(() => {
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(selectedFile);
-    }
-  }, [selectedFile]);
-
-  // Setting image preview
-  useEffect(() => {
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(selectedFile);
-    }
-  }, [selectedFile]);
+    </form>);
+  }
 
   return (
     <div className='app'>
@@ -90,20 +104,21 @@ function App() {
             flexWrap: 'nowrap',
           }}
         >
-          <Item><Form /></Item>
-          <Item><Form /></Item>
+          <Item><Form type={FormType.Description}/></Item>
+          <Item><Form type={FormType.Requirements}/></Item>
         </Box>
         <Box sx={{
           display: 'flex',
           flexWrap: 'nowrap',
           justifyContent: 'flex-end'
         }}>
-          <Item sx={{ gridRow: '1', gridColumn: '4 / 5' }}>
+          <Item>
             <button
               type='submit'
               className='btn'
               disabled={isDisabled}
               tabIndex={0}
+              onClick={onCompareButton}
             >
               {buttonText}
             </button></Item>
