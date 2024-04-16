@@ -23,7 +23,6 @@ function App() {
   const [fileContents] = useState(new Map());
   const [DescrPreview, setDescPreview] = useState(false);
   const [ReqPreview, setReqPreview] = useState(false);
-  const [dummyEvent, setDummy] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [buttonText, setButtonText] = useState('Select your files first');
 
@@ -65,7 +64,7 @@ function App() {
       "Description": fileContents.get(FormType.Description),
       "Requirements": fileContents.get(FormType.Requirements),
     };
-    fetch('http://localhost:8080/upload', {
+    fetch('/upload', {
       method: 'POST',
       body: JSON.stringify(body),
     }).then((response) => {
