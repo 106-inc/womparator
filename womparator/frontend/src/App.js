@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/system';
+import GoogleDocPreview from './assets/fonts/GoogleDocsIcon.svg'
 import './App.css';
 
 function Item(props) {
@@ -20,7 +21,9 @@ function App() {
   const [files] = useState(new Map());
   const [filenames] = useState(new Map());
   const [fileContents] = useState(new Map());
-  const [preview, setPreview] = useState(null);
+  const [DescrPreview, setDescPreview] = useState(false);
+  const [ReqPreview, setReqPreview] = useState(false);
+  const [dummyEvent, setDummy] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [buttonText, setButtonText] = useState('Select your files first');
 
@@ -42,7 +45,16 @@ function App() {
     }
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
+      reader.onloadend = () => {
+        switch (formType) {
+          case FormType.Description:
+            setDescPreview(true);
+            break;
+          case FormType.Requirements:
+            setReqPreview(true);
+            break;
+        }
+      };
       reader.onload = () => fileContents.set(formType, reader.result)
       reader.readAsText(file);
     }
@@ -68,6 +80,15 @@ function App() {
 
   function Form(props) {
     let filename = filenames.get(props.type);
+    let preview = false;
+    switch (props.type) {
+      case FormType.Description:
+        preview = DescrPreview;
+        break;
+      case FormType.Requirements:
+        preview = ReqPreview;
+        break;
+    }
     return (<form>
       <label className='uploader'>
         <div className='upload-space'>
@@ -75,7 +96,7 @@ function App() {
             {preview ? (
               <div className='preview'>
                 <img
-                  src={preview}
+                  src={GoogleDocPreview}
                   alt='Preview of the file to be uploaded'
                 />
               </div>
