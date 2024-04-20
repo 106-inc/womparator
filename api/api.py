@@ -21,7 +21,8 @@ class APIRequest():
         self.headers['x-folder-id'] = self.folder_id
 
     def createURLModel(self):
-        model = "gpt://" + self.folder_id + "/yandexgpt-lite"
+        model = "gpt://" + self.folder_id + "/yandexgpt-lite/latest"
+        # model = "gpt://" + self.folder_id + "/yandexgpt/latest"
         return model
 
     def createCompleteOptions(self):
