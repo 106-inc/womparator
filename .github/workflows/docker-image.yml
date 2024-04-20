@@ -11,9 +11,15 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    container: docker/compose
 
     steps:
     - uses: actions/checkout@v3
-    - name: Docker Compose Action
-      uses: hoverkraft-tech/compose-action@v2.0.0
-            
+
+    - name: Building docker container
+      run: docker-compose build
+    - name: Starting
+      run: docker-compose up -d
+
+    - name: Cleanup docker
+      run: docker-compose down
