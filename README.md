@@ -7,4 +7,10 @@ In repository's root, do (Docker is required):
 docker-compose up
 ```
 
-After that, open page on address `http://localhost:3000` to access web interface
+After that, open page on address `http://localhost:${WOMP_FRONT_PORT}` to access web interface.
+
+To access backend server, go to `http://localhost:${WOMP_BACK_PORT}`
+> If you can't use the default ports values from .env file, you can create  your own one and pass it to compose command as follows:
+> ```bash
+> docker-compose --env-file /path/to/env up
+> ```

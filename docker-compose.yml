@@ -8,10 +8,10 @@ services:
     depends_on:
       - backend
     ports:
-      - "3000:3000"
+      - "${WOMP_FRONT_PORT}:3000"
   backend:
     build: ./womparator/backend
     volumes:
       - ./womparator/backend:/app
     ports:
-      - "8080:8080"
+      - "${WOMP_BACK_PORT}:8080"
