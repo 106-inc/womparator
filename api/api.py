@@ -21,14 +21,14 @@ class APIRequest():
         self.headers['x-folder-id'] = self.folder_id
 
     def createURLModel(self):
-        model = "gpt://" + self.folder_id + "/yandexgpt-lite/latest"
-        # model = "gpt://" + self.folder_id + "/yandexgpt/latest"
+        # model = "gpt://" + self.folder_id + "/yandexgpt-lite/latest"
+        model = "gpt://" + self.folder_id + "/yandexgpt/latest"
         return model
 
     def createCompleteOptions(self):
         completeOptions = {}
         completeOptions["stream"] = False
-        completeOptions["temperatute"] = 0.6
+        completeOptions["temperatute"] = 0
         completeOptions["maxTokens"] = 2000
         return completeOptions
 
@@ -56,6 +56,7 @@ class APIRequest():
         #    outfile.write(json_data)
 
     def send_request(self):
+        print("Request: ", self.json)
         response = requests.post(self.url, headers=self.headers, json=self.json)
         result = self.handle_error(response, 0).text
         return result
