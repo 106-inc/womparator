@@ -75,7 +75,9 @@ class YandexAPIRequest(APIRequest):
         self.system_role = system_role
         self.max_attempt_count = max_attempt_count
         self.createJSON()
+        
+        logging.info(f"Yandex:{self.model_name} request: {self.prompt}")
         res = self.send_request()
 
-        logging.debug(f"Yandex response: {res.text}")
+        logging.info(f"Yandex:{self.model_name} response: {res.text}")
         return res.json()['result']['alternatives'][0]['message']['text']
