@@ -46,32 +46,27 @@ export default function ImportFiles() {
         setIsDisabled(false); // Enabling upload button
         setButtonText("Compare!");
       }
-    }
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        switch (formType) {
-          case FormType.Description:
-            setDescPreview(true);
-            break;
-          case FormType.Requirements:
-            setReqPreview(true);
-            break;
-        }
-      };
-      reader.onload = () => fileContents.set(formType, reader.result)
-      reader.readAsText(file);
+      switch (formType) {
+        case FormType.Description:
+          setDescPreview(true);
+          break;
+        case FormType.Requirements:
+          setReqPreview(true);
+          break;
+      }
     }
   };
 
   const onCompareButton = () => {
-    const body = {
-      "Description": fileContents.get(FormType.Description),
-      "Requirements": fileContents.get(FormType.Requirements),
-    };
+    let body = new FormData();
+    function appendFile(label) {
+      body.append(label, files.get(label))
+    }
+    appendFile(FormType.Description)
+    appendFile(FormType.Requirements)
     fetch('/upload', {
       method: 'POST',
-      body: JSON.stringify(body),
+      body: body
     }).then((response) => {
       response.json().then((body) => {
         console.log(response)
