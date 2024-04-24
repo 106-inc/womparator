@@ -2,6 +2,8 @@ import sys
 import time
 sys.path.insert(0, './../api')
 import request as req
+import api_ollama
+import api_yandex
 
 text1 = "# Общие требования\
 Насосное оборудование (включая вспомогательные системы), на которое распространяется настоящий стандарт, должно конструироваться и изготавливаться в расчете на срок службы не менее 20 лет (за исключением естественно изнашиваемых деталей, согласно таблице 14) и не менее 3 лет непрерывной эксплуатации. Остановка оборудования для выполнения техобслуживания или проверки не является нарушением этого требования.\
@@ -30,18 +32,15 @@ text5 = """
 Настоящий стандарт является модифицированным по отношению к международному стандарту [1] (Насосы центробежные герметичные для технологического обслуживания в нефтяной, нефтехимической и газовой промышленности).
 """
 
-a = req.request(text = text1, role=0)
-b = req.request(text = text2, role=0)
-c = req.request(text = text3, role=0)
-d = req.request(text = text4, role=0)
-e = req.request(text = text5, role=0)
+llm_api = api_ollama.LlamaAPIRequest(model_name="llama3")
+# llm_api = api_ollama.LlamaAPIRequest(model_name="llama2")
+# llm_api = api_yandex.YandexAPIRequest(model_name="yandexgpt-lite")
+# llm_api = api_yandex.YandexAPIRequest(model_name="yandexgpt")
 
-print(a)
-
-print(b)
-
-print(c)
-
-print(d)
-
-print(e)
+texts = [text1, text2, text3, text4, text5]
+for t in texts:
+    print("=--------------------------------------------------------------------=")
+    print(f"TEXT: {t}", end='\n\n')
+    res = req.request(llm_api, text=t, role=0)
+    print(f"RESPONSE: {res}", end='\n\n')
+    print("=--------------------------------------------------------------------=")
