@@ -25,8 +25,9 @@ class LlamaAPIRequest(APIRequest):
             {'role': 'system', 'content': system_role},
             {'role': 'user', 'content': text}
         ]
+        logging.info(f"Ollama request: {message}")
         response = ollama.chat(model=self.model_name, messages=message)
 
-        logging.debug(f"Ollama response: {response}")
+        logging.info(f"Ollama response: {response}")
         assert response['done']
         return response['message']['content']

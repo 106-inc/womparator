@@ -46,10 +46,10 @@ response5 = "Список требований компании-закупщик
 response6 = "* Возможность повышения напора на 5 % относительно номинальных параметров.\n\n* Возможность замены рабочего колеса (колёс) на рабочее колесо (колёса) большего диаметра.\n* Возможность применения сменной проточной части.\n* Возможность увеличения частоты вращения вала регулируемого привода.\n* Наличие места под установку дополнительной ступени насоса."
 response7 = "Список требований компании-закупщика к оборудованию:\\n\\n* **требований нет**."
 
-llm_api = api_ollama.LlamaAPIRequest(model_name="llama3")
+# llm_api = api_ollama.LlamaAPIRequest(model_name="llama3")
 # llm_api = api_ollama.LlamaAPIRequest(model_name="llama2")
 # llm_api = api_yandex.YandexAPIRequest(model_name="yandexgpt-lite")
-# llm_api = api_yandex.YandexAPIRequest(model_name="yandexgpt")
+llm_api = api_yandex.YandexAPIRequest(model_name="yandexgpt")
 
 responses = [response1, response2, response3, response4, response5, response6, response7]
 texts = [text0, text1, text2, text3, text4, text5]
@@ -57,9 +57,9 @@ response_to_test = responses[0]
 for t in texts:
     print("=--------------------------------------------------------------------=")
     points = req.extract_points(response_to_test)
-    print(f"TEXT: {t}", end='\n\n')
+    print(f"TEXT: {t}")
     for p in points:
-        print(f"POINT: {p}", end='\n\n')
+        print(f"\nPOINT: {p}", end='\n\n')
         res = req.request(llm_api, text=t, clauses=[p], role=2)
         print(f"RESPONSE: {res}")
     print("=--------------------------------------------------------------------=")
