@@ -78,7 +78,7 @@ export default function ImportFiles() {
     //
     const data = { descr : body[FormType.Description], req : body[FormType.Requirements] }
 
-    navigate('/diff-view', {state : data})
+    navigate('/csv-table-view')
   }
 
   function Form(props) {
