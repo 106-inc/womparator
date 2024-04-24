@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import ImportFiles from "./ImportFiles"
-import DiffViewerPage from "./DiffView";
+import CsvTableView from "./CsvTableView"
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<ImportFiles />} />
-      <Route path="/diff-view" element={<DiffViewerPage />} />
+      <Route path="/csv-table-view" element={<CsvTableView />} />
     </Routes>
   );
 }

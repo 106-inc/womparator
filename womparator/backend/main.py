@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, Response
 from flask_cors import CORS
 from flask import request
 from werkzeug.datastructures import FileStorage
 import docx
+import pandas as pd
 
 womparator = Flask(__name__)
 CORS(womparator)
@@ -23,6 +24,23 @@ def parse(file : FileStorage) -> str:
                 req_text += "|\n"
     return req_text
 
+@womparator.route("/get_csv", methods=["GET"])
+def export_csv():
+    # Sam
+    data = {
+        "Name": ["Alice", "Bob", "Charlie"],
+        "Age": [25, 30, 35],
+        "City": ["New York", "Los Angeles", "Chicago"]
+    }
+
+    df = pd.DataFrame(data)
+    csv_data = df.to_csv(index=False)
+
+    return Response(
+        csv_data,
+        mimetype='text/csv',
+        headers={"Content-disposition":
+                 "attachment; filename=mydata.csv"})
 
 @womparator.route("/upload", methods=["POST"])
 def upload():
