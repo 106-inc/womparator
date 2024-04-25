@@ -136,7 +136,9 @@ def points_to_csv(points: list[RequirementPointInfo], desc_text_parts: list[Text
     for p in points:
         status = ('С' if p.status == RequirementStatus.SATISFIED 
                   else 'Ч' if p.status == RequirementStatus.PARTLY_SATISFIED else 'Н')
+        desc_part_id = str(int(p.desc_part_id)) if p.desc_part_id != -1 else ''
+        comment = p.comment if p.desc_part_id != -1 else 'Не удалось найти информацию'
         desc_text = desc_text_parts[p.desc_part_id].heading + desc_text_parts[p.desc_part_id].body if p.desc_part_id != -1 else ''
-        writer.writerow([p.req_part_id, p.text, p.desc_part_id, desc_text, status, p.comment])
+        writer.writerow([p.req_part_id, p.text, desc_part_id, desc_text, status, comment])
     return output.getvalue()
     
