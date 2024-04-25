@@ -27,30 +27,50 @@ class RequirementPointInfo:
     # req_chapter_id: int
     # desc_chapter_id: int
 
+def classify_filter_response(message: str) -> bool:
+    l_msg = message.lower().split()
+    if l_msg[0].startswith("да"):
+        return True
+    elif l_msg[0].startswith("нет"):
+        return False
+    logging.warning(f"Can't parse filter response: {message}")
+    return True
+
 def extract_points(llm_embed: APIRequest, llm_api: APIRequest, req_text_parts: list[TextPartInfo]) -> list[RequirementPointInfo]:
     async_res_s = []
     for req_part_id, text_req in enumerate(req_text_parts):
         text = text_req.heading + text_req.body
         async_res_s.append(req.request(llm_api, text=text, role=0)[0])
 
-    points = []
+    # create requests for filtering points
+    filter_async_res_s = []
     for req_part_id, async_res in enumerate(async_res_s):
         cur_points = req.extract_points(async_res.get())
-
+        
         for p in cur_points:
-            # create embedding
-            emb = llm_embed.get_embedding(p)
-            # save point text with embedding
-            points.append(RequirementPointInfo(p, req_part_id, emb))
+            async_filt = req.request(llm_api, text=f"Текст: {p}", role=1)[0]
+            filter_async_res_s.append((p, req_part_id, async_filt))
 
-        logging.info(f"Detected points: {cur_points}")
+    # process filter results
+    points = []
+    for filter_async_res in filter_async_res_s:
+        filter_res = filter_async_res[2].get()
+        
+        # skip filtered point
+        logging.debug(f"POINT: {filter_async_res[0]}, FILTER: {filter_res}")
+        if not classify_filter_response(filter_res):
+            logging.debug(f"!!!DROPPED!!!")
+            continue
+        
+        emb = llm_embed.get_embedding(filter_async_res[0])
+        points.append(RequirementPointInfo(filter_async_res[0], filter_async_res[1], emb))
     return points
 
 def classify_response(message) -> RequirementStatus:
     lower_message = message.lower()
     if "нет информации" in lower_message:
         reply = RequirementStatus.NO_INFORMATION
-    elif lower_message.find("не соотвеству") != -1 or "противоречивая информация" in lower_message:
+    elif lower_message.find("не соответству") != -1 or "противоречивая информация" in lower_message:
         reply = RequirementStatus.NOT_SATISFIED
     elif lower_message.find("частично соответству") != -1:
         reply = RequirementStatus.PARTLY_SATISFIED
@@ -77,8 +97,8 @@ def match_desc_points(llm_embed: APIRequest, llm_api: APIRequest, points: list[R
 
         # search k most common parts in description
         # TODO: adjust K
-        K = 1
-        kn_s = desc_embeddings_db.search(cur_point.embedding)
+        K = 3
+        kn_s = desc_embeddings_db.search(cur_point.embedding, k=K)
 
         cur_async_responses = []
         for neighbor in kn_s:
