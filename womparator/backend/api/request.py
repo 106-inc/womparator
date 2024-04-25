@@ -6,9 +6,10 @@ import logging
 #role == 0: find technical details in document and to add new clause
 #role == 1: briefly summarize this text
 #role == 2: compare original_text with clauses
+#role == 3: additional checker for strict tech details
 def request(llm_api: APIRequest, text = "", clauses = [], role = -1):
     assert(role >= 0)
-    assert(role < 3)
+    assert(role < 4)
     
     results = []
     if role == 0:
@@ -17,11 +18,13 @@ def request(llm_api: APIRequest, text = "", clauses = [], role = -1):
     elif role == 1:
         a = llm_api.request(text, "Ты профессиональный опытный инженер. Сделай краткий пересказ данного технического документа и выдели всю важную информацию. Ответ должен быть максимально лаконичным. Ответ должен быть на русском языке.")
         results.append(a)
-    else:
+    elif role == 2:
         for clause in clauses:
             a = llm_api.request(text, "Ты профессиональный опытный инженер. Ты на вход будешь получать текст с техническим описанием. Определи удовлетворяет ли текст пункту технического требования. Ответами могут быть: нет информации (о пункте ничего не сказано в тексте), несоответствует (имеется противоречивая информация), частично соответствует (нехватает информации), соответствует (информация в пункте полностью соответствует информации текста). Ответ должен быть на русском языке. Пункт технического требования: " + str(clause))
             results.append(a)
-    
+    elif role == 3:
+        res = llm_api.request(text, "Ты профессиональный опытный инженер. Соответствует ли данный текст строгим техническим требованиям. Ты должент ответить строго 'соответствует' или 'не соответствует'")
+        results.append(res)
     return results
 
 

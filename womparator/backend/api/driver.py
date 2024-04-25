@@ -46,6 +46,26 @@ def extract_points(llm_embed: APIRequest, llm_api: APIRequest, req_text_parts: l
         logging.info(f"Detected points: {cur_points}")
     return points
 
+def additional_checker(llm_embed: APIRequest, llm_api: APIRequest, possible_points: list[RequirementPointInfo]) -> list[RequirementPointInfo]:
+    async_res_s = []
+    for req_part_id, text_req in enumerate(possible_points):
+        text = text_req.text
+        async_res_s.append(req.request(llm_api, text=text, role=3)[0])
+
+    points = []
+    for req_part_id, async_res in enumerate(async_res_s):
+        cur_points = req.additional_checker(async_res.get())
+
+        for p in cur_points:
+            # create embedding
+            emb = llm_embed.get_embedding(p)
+            if (p.text.find("не соответ") == -1 and p.text.find("Не соответ") == -1) and (p.text.find("соответ") != -1 or p.text.find("Cоответ") != -1):
+            # save point text with embedding
+                points.append(RequirementPointInfo(p, req_part_id, emb))
+
+        logging.info(f"Detected points: {cur_points}")
+    return points
+
 def classify_response(message) -> RequirementStatus:
     lower_message = message.lower()
     if "нет информации" in lower_message:
