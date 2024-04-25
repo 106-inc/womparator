@@ -1,4 +1,4 @@
-import api as api
+from api.api import APIRequest
 import re
 import logging
 
@@ -6,7 +6,7 @@ import logging
 #role == 0: find technical details in document and to add new clause
 #role == 1: briefly summarize this text
 #role == 2: compare original_text with clauses
-def request(llm_api: api.APIRequest, text = "", clauses = [], role = -1):
+def request(llm_api: APIRequest, text = "", clauses = [], role = -1):
     assert(role >= 0)
     assert(role < 3)
     
