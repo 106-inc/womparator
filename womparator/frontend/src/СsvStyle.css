@@ -1,0 +1,88 @@
+.table-container {
+    margin: 20px;
+    overflow-x: auto;
+    position: relative;
+}
+
+.csv-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    z-index: 2;
+    position: relative
+}
+
+.csv-table th,
+.csv-table td {
+    padding: 10px 20px;
+    /* Aligns all content to the right */
+    text-align: right;
+    /* Horizontal line under each row */
+    border-bottom: 1px solid #ddd;
+    /* Vertical lines between columns */
+    border-right: 1px solid #ddd;
+    position: relative
+}
+
+/* Remove border from the last column */
+.csv-table th:last-child,
+.csv-table td:last-child {
+    border-right: none;
+    position: relative
+}
+
+.csv-table th {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.csv-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.csv-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f8f8;
+    z-index: 10;
+}
+
+.csv-table td {
+    text-align: right;
+}
+
+.csv-table td:first-child,
+.csv-table th:first-child {
+    text-align: left;
+}
+
+.highlight-red {
+    background-color: #ffcccc;
+    /* Light red background to highlight rows which not requires */
+}
+
+.highlight-green {
+    background-color: #beffb8;
+    /* Light red background to highlight rows which requires */
+}
+
+.highlight-gray {
+    background-color: #dbdbdb;
+    /* Light red background to highlight rows which partially requires */
+}
+
+@media (max-width: 600px) {
+    .csv-table {
+        font-size: 14px;
+    }
+
+    .csv-table th,
+    .csv-table td {
+        padding: 8px 15px;
+    }
+}

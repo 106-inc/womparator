@@ -2,6 +2,10 @@ import React, { useMemo, useEffect, useState } from 'react';
 import { useTable } from 'react-table';
 import { parse } from 'papaparse';
 import { Box } from '@mui/system';
+import './СsvStyle.css';
+
+import Particles from "react-tsparticles";
+import { particlesOptions, particlesInit } from "./DynamicBack"
 
 function Item(props) {
   const { sx, ...other } = props;
@@ -63,45 +67,57 @@ export default function CsvTableView() {
   const handleDownloadCsv = () => downloadCsv();
 
   return (
-    <div>
-      <Box sx={{
-          display: 'flex',
-          flexWrap: 'nowrap',
-          justifyContent: 'flex-end'
-        }}>
-          <Item>
-            <button
-              type='submit'
-              className='btn'
-              tabIndex={0}
-              onClick={handleDownloadCsv}
-            >
-              {buttonText}
-            </button></Item>
-      </Box>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => (
-                  <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                ))}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+   <div className='background'>
+        <Particles
+            id="tsparticles"
+            init={particlesInit}
+            options={particlesOptions}
+        />
+        <div className="table-container">
+        <Box sx={{
+            display: 'flex',
+            flexWrap: 'nowrap',
+            justifyContent: 'flex-end'
+            }}>
+            <Item>
+                <button
+                type='submit'
+                className='btn'
+                tabIndex={0}
+                onClick={handleDownloadCsv}
+                >
+                {buttonText}
+                </button></Item>
+        </Box>
+        <table {...getTableProps()} className="csv-table">
+            <thead>
+            {headerGroups.map(headerGroup => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                    <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                ))}            </tr>
+            ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+            {rows.map(row => {
+                prepareRow(row);
+                // Determine if the last column's value meets your condition
+                const is_requires = row.values[row.cells[row.cells.length - 2].column.id] === 'С';
+                const is_partially_requires = row.values[row.cells[row.cells.length - 2].column.id] === 'Ч';
+
+                return (
+                <tr {...row.getRowProps()} className={is_requires ? "highlight-green" :
+                                                        is_partially_requires ? "highlight-gray" : "highlight-red"}>
+                    {row.cells.map(cell => (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    ))}
+                    </tr>
+                    );
+                })}
+            </tbody>
+        </table>
+        </div>
     </div>
   );
 };
+//};

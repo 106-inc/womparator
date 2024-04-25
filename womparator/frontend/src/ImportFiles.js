@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box } from '@mui/system';
 import { useNavigate } from "react-router-dom";
 
+import Particles from "react-tsparticles";
+import { particlesOptions, particlesInit } from "./DynamicBack"
+
 import GoogleDocPreview from './assets/fonts/GoogleDocsIcon.svg'
+
+import { ReactComponent as GaspromLogo } from './assets/fonts/GaspromLogo.svg'
+import { ReactComponent as TeamLogo } from './assets/fonts/TeamLogo.svg'
+import { ReactComponent as MiptLogo } from './assets/fonts/MiptLogo.svg'
+
 import './App.css';
 
 function Item(props) {
@@ -22,7 +30,6 @@ function Item(props) {
 export default function ImportFiles() {
   const [files] = useState(new Map());
   const [filenames] = useState(new Map());
-  const [fileContents] = useState(new Map());
   const [DescrPreview, setDescPreview] = useState(false);
   const [ReqPreview, setReqPreview] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -34,7 +41,6 @@ export default function ImportFiles() {
   };
 
   const navigate = useNavigate();
-  const handleClick = (path, Description, Requirements) => navigate(path, {Description, Requirements});
 
   // Handling file selection from input
   const onFileSelected = (e, formType) => {
@@ -53,6 +59,8 @@ export default function ImportFiles() {
         case FormType.Requirements:
           setReqPreview(true);
           break;
+        default:
+          console.error('Failed on file handling');
       }
     }
   };
@@ -76,8 +84,6 @@ export default function ImportFiles() {
         });
     });
     //
-    const data = { descr : body[FormType.Description], req : body[FormType.Requirements] }
-
     navigate('/csv-table-view')
   }
 
@@ -91,6 +97,8 @@ export default function ImportFiles() {
       case FormType.Requirements:
         preview = ReqPreview;
         break;
+      default:
+        console.error('Failed on type selection');
     }
     return (<form>
       <label className='uploader'>
@@ -117,37 +125,57 @@ export default function ImportFiles() {
   }
 
   return (
-    <div className='app'>
-      <header className='title'>
-        <h1>Compare documents</h1>
-      </header>
-      <main>
-        <Box
-          sx={{
+    <div className='background'>
+      <Particles
+          id="tsparticles"
+          init={particlesInit}
+          options={particlesOptions}
+      />
+      <div className='app'>
+        <header className='title'>
+          <h1>Compare documents</h1>
+        </header>
+        <main>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'nowrap',
+            }}
+          >
+            <Item><Form type={FormType.Description}/></Item>
+            <Item><Form type={FormType.Requirements}/></Item>
+          </Box>
+          <Box sx={{
             display: 'flex',
             flexWrap: 'nowrap',
-          }}
-        >
-          <Item><Form type={FormType.Description}/></Item>
-          <Item><Form type={FormType.Requirements}/></Item>
-        </Box>
-        <Box sx={{
-          display: 'flex',
-          flexWrap: 'nowrap',
-          justifyContent: 'flex-end'
-        }}>
-          <Item>
-            <button
-              type='submit'
-              className='btn'
-              disabled={isDisabled}
-              tabIndex={0}
-              onClick={onCompareButton}
-            >
-              {buttonText}
-            </button></Item>
-        </Box>
-      </main>
+            justifyContent: 'flex-end'
+          }}>
+            <Item>
+              <button
+                type='submit'
+                className='btn'
+                disabled={isDisabled}
+                tabIndex={0}
+                onClick={onCompareButton}
+              >
+                {buttonText}
+              </button></Item>
+          </Box>
+          <div className="logo-container">
+             <a href="https://www.gazprom-neft.ru/" target="gasprom-neft">
+              <GaspromLogo className="company-logo" />
+            </a>
+            <a href="https://github.com/orgs/106-inc/teams/pixies" target="gasprom-neft">
+              <TeamLogo className="company-logo" />
+            </a>
+            <a href="https://mipt.ru/" target="mipt">
+              <MiptLogo className="company-logo" />
+            </a>
+          </div>
+          <div className="gasprom-container">
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
