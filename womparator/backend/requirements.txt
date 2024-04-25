@@ -3,3 +3,5 @@ flask_cors
 python-docx
 pandas
 werkzeug
+requests
+scikit-learn
