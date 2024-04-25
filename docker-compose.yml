@@ -16,3 +16,6 @@ services:
       - ./womparator/backend:/backend
     ports:
       - "${WOMP_BACK_PORT}:8080"
+    environment:
+      YC_FOLDER_ID: ${YC_FOLDER_ID}
+      YC_IAM_TOKEN: ${YC_IAM_TOKEN}
