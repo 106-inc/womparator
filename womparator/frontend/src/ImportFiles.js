@@ -76,6 +76,7 @@ export default function ImportFiles() {
       method: 'POST',
       body: body
     }).then((response) => {
+      navigate('/csv-table-view')
       response.json().then((body) => {
         console.log(response)
       })
@@ -84,7 +85,6 @@ export default function ImportFiles() {
         });
     });
     //
-    navigate('/csv-table-view')
   }
 
   function Form(props) {
