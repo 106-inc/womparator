@@ -1,6 +1,6 @@
 FROM python:3.10-slim-bookworm
 
-WORKDIR /app
+WORKDIR /backend
 
 COPY ./requirements.txt .
 

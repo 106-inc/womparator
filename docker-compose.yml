@@ -4,7 +4,8 @@ services:
   frontend:
     build: ./womparator/frontend
     volumes:
-      - ./womparator/frontend:/usr/src/app
+      - ./womparator/frontend/public:/frontend/public
+      - ./womparator/frontend/src:/frontend/src
     depends_on:
       - backend
     ports:
@@ -12,6 +13,6 @@ services:
   backend:
     build: ./womparator/backend
     volumes:
-      - ./womparator/backend:/app
+      - ./womparator/backend:/backend
     ports:
       - "${WOMP_BACK_PORT}:8080"
