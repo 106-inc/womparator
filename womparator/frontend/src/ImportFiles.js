@@ -165,7 +165,7 @@ export default function ImportFiles() {
              <a href="https://www.gazprom-neft.ru/" target="gasprom-neft">
               <GaspromLogo className="company-logo" />
             </a>
-            <a href="https://github.com/orgs/106-inc/teams/pixies" target="gasprom-neft">
+            <a href="https://github.com/106-inc/womparator" target="gasprom-neft">
               <TeamLogo className="company-logo" />
             </a>
             <a href="https://mipt.ru/" target="mipt">
