@@ -26,13 +26,8 @@ def parse(file : FileStorage) -> str:
 
 @womparator.route("/get_csv", methods=["GET"])
 def export_csv():
-    # Sam
-    data = {
-        "Name": ["Alice", "Bob", "Charlie"],
-        "Age": [25, 30, 35],
-        "City": ["New York", "Los Angeles", "Chicago"]
-    }
-
+    # Sample Data
+    data = pd.read_csv("result.csv")
     df = pd.DataFrame(data)
     csv_data = df.to_csv(index=False)
 

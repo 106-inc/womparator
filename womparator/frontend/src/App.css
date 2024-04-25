@@ -28,7 +28,40 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+.logo-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  padding: 10px 0;
+  position: relative;
+}
+
+.company-logo {
+  height: 100px;
+  width: auto;
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+}
+
+.company-logo:hover {
+  transform: scale(1.1);
+}
+
+@keyframes rotateAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
