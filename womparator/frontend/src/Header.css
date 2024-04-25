@@ -1,0 +1,36 @@
+.title-container {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.animated-title {
+    font-size: 3rem;
+    color: transparent;
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: gradient-shift 3s ease infinite;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-transform: uppercase;
+}
+
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .animated-title {
+        font-size: 2.5rem;
+    }
+}

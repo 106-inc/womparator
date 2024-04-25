@@ -7,7 +7,7 @@ export const particlesInit = async (main) => {
 export const particlesOptions = {
     background: {
         color: {
-            value: "#b8b6b8",
+            value: "#f0f5ff",
         },
     },
     fullScreen: {
@@ -38,10 +38,10 @@ export const particlesOptions = {
     },
     particles: {
         color: {
-            value: "#ffffff",
+            value: "#000000",
         },
         links: {
-            color: "#ffffff",
+            color: "#2e2d2d",
             distance: 150,
             enable: true,
             opacity: 0.5,
@@ -57,7 +57,7 @@ export const particlesOptions = {
                 default: "bounce",
             },
             random: false,
-            speed: 6,
+            speed: 2,
             straight: false,
         },
         number: {

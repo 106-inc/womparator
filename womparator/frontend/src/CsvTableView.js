@@ -41,7 +41,7 @@ function downloadCsv() {
 
 export default function CsvTableView() {
   const [tableData, setTableData] = useState([]);
-  const [buttonText, setButtonText] = useState('Download CSV');
+  const [ buttonText ] = useState('Download CSV');
 
   useEffect(() => {
     fetch('/get_csv', {
