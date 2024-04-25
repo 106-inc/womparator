@@ -3,7 +3,7 @@ import requests
 import os
 import time
 import numpy as np
-from api import APIRequest
+from api.api import APIRequest
 import logging
 
 
