@@ -39,6 +39,7 @@ class YandexAPIRequest(APIRequest):
     def __init__(self, model_name: str = "yandexgpt") -> None:
         self.model_name = model_name
         self.prompt = {}
+        self.max_attempt_count = 10
         self.folder_id = os.getenv("YC_FOLDER_ID")
         assert self.folder_id and "env variable 'YC_FOLDER_ID' undefined"
         self.api = os.getenv("YC_IAM_TOKEN")
@@ -118,13 +119,14 @@ class YandexAPIRequest(APIRequest):
     #     logging.info(f"Yandex:{self.model_name} response: {res.text}")
     #     return res.json()['result']['alternatives'][0]['message']['text']
 
-    def get_embedding(self, text: str):
+    def get_embedding(self, text: str, max_attempt_count=10):
         self.url = "https://llm.api.cloud.yandex.net:443/foundationModels/v1/textEmbedding"
         # doc_uri = f"emb://{FOLDER_ID}/text-search-doc/latest"
         query_uri = f"emb://{self.folder_id}/text-search-query/latest"
 
         self.headers = {"Content-Type": "application/json",
                         "Authorization": f"Bearer {self.api}", "x-folder-id": f"{self.folder_id}"}
+        self.max_attempt_count = max_attempt_count
 
         self.json = {
             "modelUri": query_uri,
