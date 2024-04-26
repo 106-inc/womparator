@@ -1,3 +1,20 @@
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .btn {
   background-color: #584fec;
   color: #fff;
@@ -9,16 +26,26 @@
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s, transform 0.3s ease-in-out;
+  will-change: transform;
 }
+
 .btn:hover,
 .btn:active {
   background-color: rgba(#584fec, 0.6);
 }
+
+.btn:hover,
+.btn:focus {
+  /* Using focus to ensure accessibility */
+  animation: pulseAnimation 1.5s infinite;
+}
+
 .btn:disabled {
-  background-color: rgba(#797f8c, 0.4);
+  background-color: rgba(121, 127, 140, 0.4);
   cursor: not-allowed;
 }
+
 .btn:disabled:hover {
-  background-color: rgba(#797f8c, 0.4);
+  background-color: rgba(121, 127, 140, 0.4);
 }

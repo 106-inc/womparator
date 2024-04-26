@@ -14,7 +14,8 @@
     font-size: 16px;
     line-height: 1.5;
     z-index: 2;
-    position: relative
+    position: relative;
+    opacity: 0.85;
 }
 
 .csv-table th,
@@ -85,4 +86,25 @@
     .csv-table td {
         padding: 8px 15px;
     }
+}
+
+/* Increase animation for each row */
+.csv-table tr {
+    transition: transform 0.3s ease-in-out;
+}
+
+.csv-table tr:hover,
+.csv-table tr:focus {
+    transform: scale(1.01);
+}
+
+/* Add the increase animation to the table rows */
+.csv-table tr {
+    transition: transform 0.3s ease-in-out;
+}
+
+.csv-table tr:hover,
+.csv-table tr:focus {
+    transform: scale(1.01);
+/* Scale up the row by 3% on hover or focus */
 }
