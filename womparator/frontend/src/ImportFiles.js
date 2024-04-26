@@ -12,6 +12,7 @@ import { ReactComponent as TeamLogo } from './assets/fonts/TeamLogo.svg'
 import { ReactComponent as MiptLogo } from './assets/fonts/MiptLogo.svg'
 
 import './App.css';
+import './Header.css'
 
 function Item(props) {
   const { sx, ...other } = props;
@@ -118,7 +119,7 @@ export default function ImportFiles() {
           </>
         </div>
         <p className='filename'>
-          {filename ? filename : 'No file selected yet'}
+          {filename ? filename : 'No ' + (props.type === FormType.Description ? 'description' : 'requirements') + ' file selected yet'}
         </p>
       </label>
     </form>);
@@ -132,9 +133,9 @@ export default function ImportFiles() {
           options={particlesOptions}
       />
       <div className='app'>
-        <header className='title'>
-          <h1>Compare documents</h1>
-        </header>
+        <div className="title-container">
+          <h1 className="animated-title">Compare Documents</h1>
+        </div>
         <main>
           <Box
             sx={{
